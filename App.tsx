@@ -15,6 +15,7 @@ import {
   Text,
   useColorScheme,
   View,
+  TouchableOpacity,
 } from 'react-native';
 
 import {
@@ -25,68 +26,65 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
+//Add Lib
 import Tts from 'react-native-tts';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  //Set language voice
   useEffect(() => {
     const setLanguageTts = async () => {
       await Tts.setDefaultLanguage('vi-VN');
     };
     setLanguageTts();
-    console.log('ok log');
-    Tts.voices().then(voices => console.log(voices));
-    console.log('log voice');
-    Tts.speak('Bạn đang chưa đỗ xe đúng vị trí');
   }, []);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+  //Speaking
+  const speakingMess = mess => {
+    Tts.speak(mess);
+  };
+
+  //Console log List Of Voice
+  const logListOfVoice = () => {
+    Tts.voices().then(voices => console.log(voices));
+  };
+
+  //Stop voice speaking
+  const stopVoice = () => {
+    Tts.stop();
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text>ok</Text>
-        </View>
-      </ScrollView>
+    <SafeAreaView>
+      <View
+        style={{
+          backgroundColor: isDarkMode ? Colors.black : Colors.white,
+        }}>
+        <Text>Demo Voice Speakingg </Text>
+
+        <TouchableOpacity
+          onPress={() => speakingMess('Bạn đang chưa đỗ xe đúng vị trí')}
+          style={{width: '100%', height: 100, backgroundColor: 'blue'}}>
+          <Text>Speaking</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => logListOfVoice()}
+          style={{width: '100%', height: 100, backgroundColor: 'red'}}>
+          <Text>Console log list voice available</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => stopVoice()}
+          style={{width: '100%', height: 100, backgroundColor: 'red'}}>
+          <Text>Stop Voice Now</Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+const styles = StyleSheet.create({});
 
 export default App;

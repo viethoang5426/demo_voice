@@ -35,9 +35,27 @@ function App(): React.JSX.Element {
   //Set language voice
   useEffect(() => {
     const setLanguageTts = async () => {
-      await Tts.setDefaultLanguage('vi-VN');
+      await Tts.setDefaultLanguage('en-US');
     };
     setLanguageTts();
+
+    //Check Engines Devices & set to google engines
+    const checkEngine = async () => {
+      Tts.engines().then(engines => {
+        console.log(engines);
+        const googleEngine = engines.find(
+          engine => engine.name === 'com.google.android.tts',
+        );
+        if (googleEngine) {
+          console.log('Found Google TTS Engine');
+          Tts.setDefaultEngine('com.google.android.tts');
+        } else {
+          // Request to install Gooogle Engine
+          Tts.requestInstallEngine();
+        }
+      });
+    };
+    checkEngine();
   }, []);
 
   //Speaking
@@ -64,7 +82,7 @@ function App(): React.JSX.Element {
         <Text>Demo Voice Speakingg </Text>
 
         <TouchableOpacity
-          onPress={() => speakingMess('Bạn đang chưa đỗ xe đúng vị trí')}
+          onPress={() => speakingMess('Bạn đang đỗ xe sai vị trí rồi ')}
           style={{width: '100%', height: 100, backgroundColor: 'blue'}}>
           <Text>Speaking</Text>
         </TouchableOpacity>
